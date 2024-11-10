@@ -40,6 +40,22 @@ consumeNoLock(TokenBucket* tb, uint32_t num, uint64_t now, consumeCb cb) {
     return num;
 }
 
+/**
+ * 在初始化一个 TokenBucket 实例时，会传递以下参数：rate 和 burstSize，参数说明如下：
+ * 
+ * @param rate（令牌生成速率）：
+ * 该参数表示令牌生成的速率，即每秒钟生成的令牌数量。例如，如果 rate 为 100 token/s，则令牌桶每
+ * 秒钟会生成 100 个令牌。这个速率控制了令牌桶的再生速度，从而限制了系统的处理能力。通过设置不同
+ * 的速率，可以控制系统在单位时间内允许的操作数量。
+ * 
+ * @param burstSize（突发大小）：
+ * 该参数表示令牌桶的最大容量，即在任何给定时间点，令牌桶中最多可以有多少个令牌。如果 burstSize
+ * 为 50，则令牌桶中最多可以同时存在 50 个令牌。
+ * 突发大小允许系统在短时间内处理比速率限制更多的请求，从而支持突发流量。如果某一时刻的请求量突然
+ * 增加，而桶中有足够的令牌，则可以立即处理这些请求。
+ * 
+ * Note: 初始化好的令牌桶默认是空桶。
+ */
 static inline void 
 tokenBucketInit(TokenBucket* tb, double tokenAddRate, uint32_t burstSize) {
     assert(tb);
