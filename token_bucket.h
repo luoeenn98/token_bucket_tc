@@ -41,16 +41,13 @@ consumeNoLock(TokenBucket* tb, uint32_t num, uint64_t now, consumeCb cb) {
 }
 
 static inline void 
-tokenBucketInit(TokenBucket* tb, double tokenAddRate, 
-        uint32_t burstSize, uint64_t beginTime)
-{
+tokenBucketInit(TokenBucket* tb, double tokenAddRate, uint32_t burstSize) {
     assert(tb);
     assert(tokenAddRate > 0);
     assert(burstSize > 0);
-
     tb->tokenAddRate = tokenAddRate;
     tb->burstSize = burstSize;
-    tb->tokenTime = beginTime;
+    tb->tokenTime = 0;
 }
 
 static inline uint32_t 

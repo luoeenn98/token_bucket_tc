@@ -36,26 +36,24 @@ int main() {
      * 为 50，则令牌桶中最多可以同时存在 50 个令牌。
      * 突发大小允许系统在短时间内处理比速率限制更多的请求，从而支持突发流量。如果某一时刻的请求量突然
      * 增加，而桶中有足够的令牌，则可以立即处理这些请求。
-     * 
-     * startTokens（初始令牌数量）：
-     * 该参数表示在令牌桶初始化时，桶中有多少个令牌。例如，如果 startTokens 为 10，则令牌桶在初始化时
-     * 会有 10 个令牌。这个参数允许在系统启动时即具备处理一定数量请求的能力，而不需要等待令牌逐渐生成。
      */
-    tokenBucketInit(&tb, TOKEN_ADD_RATE, BUCKET_SIZE, 0);
-    printf("rate/s:%f, bucket size:%ld, token time:%lld\n",
-            tb.tokenAddRate, tb.burstSize, tb.tokenTime);
+    tokenBucketInit(&tb, TOKEN_ADD_RATE, BUCKET_SIZE);
+    printf("rate/s:%f, bucket size:%ld\n", tb.tokenAddRate, tb.burstSize);
 
     tokens = 10;
     total_bytes = 0;
     consumed_success_n = 0;
     consumed_failed_n = 0;
-    begin_time = tokens / TOKEN_ADD_RATE;
-    for (i = begin_time; i < 100 + begin_time; i++) {
+
+    for (i = 0; i < 100; i++) {
         total_bytes += tokens;
-        if (consume(&tb, tokens, i) == tokens)
+        if (consume(&tb, tokens, i) == tokens) {
             consumed_success_n += tokens;
-        else
+            printf("第%d秒，一次性消费成功%d个令牌\n", i + 1, tokens);
+        } else {
             consumed_failed_n += tokens;
+            printf("第%d秒，消费失败\n", i + 1);
+        }
     }
 
     printf("Consumed success:%lu, failed:%lu, fixed rate:%f%\n", 
