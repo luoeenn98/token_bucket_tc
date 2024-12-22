@@ -16,7 +16,7 @@ getTimeUs() {
     return tv.tv_sec * US_PER_SEC + tv.tv_usec;
 }
 
-int main() {
+void demo() {
     int i, tokens, begin_time;
     uint64_t total_bytes;
     uint32_t consumed_success_n, consumed_failed_n;
@@ -30,9 +30,9 @@ int main() {
     consumed_success_n = 0;
     consumed_failed_n = 0;
 
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < 50; i++) {
         total_bytes += tokens;
-        if (consume(&tb, tokens, i) == tokens) {
+        if (consume(&tb, tokens, (double)i) == tokens) {
             consumed_success_n += tokens;
             printf("第%d秒，一次性消费成功%d个令牌\n", i + 1, tokens);
         } else {
@@ -44,6 +44,9 @@ int main() {
     printf("Consumed success:%lu, failed:%lu, fixed rate:%f%\n", 
             consumed_success_n, consumed_failed_n, 
             (consumed_success_n * 100.0)/total_bytes);
-    
+}
+
+int main() {
+    demo();
     return 0;
 }
